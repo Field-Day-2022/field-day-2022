@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import NewSessionForm from "../components/NewSessionForm";
 import { getStandardizedDateTimeString } from "../utils/firestore";
+import React from 'react';
 
 export default function NewSessionTool({ setData, project, setProject }) {
 

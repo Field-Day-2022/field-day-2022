@@ -11,6 +11,7 @@ import { _ } from "lodash";
 import { TABLE_LABELS, dynamicArthropodLabels, getKey } from "../const/tableLabels";
 import { LizardIcon, SessionIcon } from "../assets/icons";
 import { ProjectField } from "../components/FormFields";
+import React from 'react';
 
 export default function ExportModal({ showModal, onCancel }) {
     const [activeTab, setActiveTab] = useState('Data Form');

@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import React from 'react';
 
 export default function Tab({ text, icon, active, onClick }) {
     const background = classNames({

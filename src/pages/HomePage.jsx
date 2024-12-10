@@ -3,6 +3,7 @@ import PageWrapper from "./PageWrapper";
 import { useAtom } from "jotai";
 import { currentPageName } from '../utils/jotai';
 import lizardImage from '../assets/lizard.jpg';
+import React from 'react';
 
 export default function HomePage() {
     const [currentPage, setCurrentPage] = useAtom(currentPageName);

@@ -1,6 +1,7 @@
 import { FormField, ProjectField } from './FormFields';
 import { TABLE_KEYS } from '../const/tableLabels';
 import { useEffect } from 'react';
+import React from 'react';
 
 export default function NewSessionForm({ session, setField, project, setProject }) {
     useEffect(() => {

@@ -11,6 +11,7 @@ import { AnimatePresence, useCycle } from "framer-motion";
 import { getDocs, query, collection, where } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { db } from "../utils/firebase";
+import React from 'react';
 
 export const YearField = ({ year, setYear, layout }) => {
     const currentYear = new Date().getFullYear();
@@ -154,14 +155,16 @@ const HandlerField = ({ handler, setHandler, layout, disabled }) => {
     );
 }
 const SiteField = ({ site, setSite, disabled, project }) => {
-    if (disabled) return <ReadOnlyField label='Site' value={site} />
-    const [siteOptions, setSiteOptions] = useState([])
+    const [siteOptions, setSiteOptions] = useState([]);
+
     const populateSiteOptions = async () => {
         setSiteOptions(await getSitesForProject(project));
-    }
+    };
+
     useEffect(() => {
         populateSiteOptions();
-    }, [project])
+    }, [project]); // Trigger re-fetch when project or triggerRerender changes
+
     return (
         <InputLabel
             label={'Site'}
@@ -170,17 +173,17 @@ const SiteField = ({ site, setSite, disabled, project }) => {
                 value={site || 'Select an option'}
                 onChange={(e) => {
                     setSite(e.target.value);
-                } }
+                }}
             >
-                <option value="Select an option" disabled hidden>Select an option</option>
-                {siteOptions.map((option) => {
-                    return (
-                        <option key={option} value={option}>{option}</option>
-                    );
-                })}
-            </select>} />
-    )
-} 
+             <option value="Select an option" disabled hidden>Select an option</option>
+                {siteOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                ))}
+            </select>}
+        />
+    );
+};
+
 
 const ReadOnlyField = ({ label, value }) => {
     return (
@@ -191,7 +194,7 @@ const ReadOnlyField = ({ label, value }) => {
 }
 
 const ArrayField = ({ array, setArray, disabled, site, project }) => {
-    if (disabled) return <ReadOnlyField label='Array' value={array} /> 
+    if (disabled) return <ReadOnlyField label='Array' value={array} />
     const [arrayOptions, setArrayOptions] = useState([])
     const populateArrayOptions = async () => {
         setArrayOptions(await getArraysForSite(project, site));
@@ -220,9 +223,9 @@ const ArrayField = ({ array, setArray, disabled, site, project }) => {
 }
 
 const NoCapturesField = ({ noCaptures, setNoCaptures, layout, disabled }) => (
-    <Checkbox 
+    <Checkbox
         label={'No Captures?'}
-        setValue={setNoCaptures}  
+        setValue={setNoCaptures}
         value={noCaptures}
     />
 );
@@ -562,7 +565,7 @@ const RegenTailField = ({ regenTail, setRegenTail, layout, disabled }) => {
     );
 }
 
-export const checkToeCodeValidity = async (toeCode, environment, project, site, array, speciesCode, recapture) => {
+export const checkToeCodeValidity = async (toeCode, environment, project, site, speciesCode, recapture) => {
     if (toeCode === undefined) toeCode = ''
     if (toeCode.length < 2) {
         notify(Type.error, 'Toe Clip Code needs to be at least 2 characters long');
@@ -571,15 +574,14 @@ export const checkToeCodeValidity = async (toeCode, environment, project, site, 
         notify(Type.error, 'Toe Clip Code must have an even number of characters');
         return false;
     } else {
-        const collectionName = environment === 'live' ? 
-            `${project.replace(/\s/g, '')}Data` 
-            : 
+        const collectionName = environment === 'live' ?
+            `${project.replace(/\s/g, '')}Data`
+            :
             `Test${project.replace(/\s/g, '')}Data`;
         const lizardSnapshot = await getDocs(query(
             collection(db, collectionName),
             where('toeClipCode', '==', toeCode),
             where('site', '==', site),
-            where('array', '==', array),
             where('speciesCode', '==', speciesCode)
         ));
         if (recapture === 'true') {
@@ -608,8 +610,8 @@ export const checkToeCodeValidity = async (toeCode, environment, project, site, 
 
 
 const ToeClipCodeField = ({
-    toeCode, setToeCode, project, site, array, speciesCode, recapture
-}) => {
+                              toeCode, setToeCode, project, site, speciesCode, recapture
+                          }) => {
     const environment = useAtomValue(appMode);
     const [buttonText, setButtonText] = useState('Generate');
     const [recaptureHistoryIsOpen, setRecaptureHistoryIsOpen] = useState(false);
@@ -639,10 +641,9 @@ const ToeClipCodeField = ({
         const lizardSnapshot = await getDocs(query(
             collection(db, collectionName),
             where('site', '==', site),
-            where('array', '==', array),
             where('speciesCode', '==', speciesCode)
         ));
-        console.log(`${collectionName} from site ${site} and array ${array} with species code ${speciesCode}`);
+        console.log(`${collectionName} from site ${site} with species code ${speciesCode}`);
         const toeCodesArray = [];
         lizardSnapshot.docs.forEach(document => {
             toeCodesArray.push(document.data().toeClipCode);
@@ -674,7 +675,6 @@ const ToeClipCodeField = ({
             lizardDataRef,
             where('toeClipCode', '==', toeCode),
             where('site', '==', site),
-            where('array', '==', array),
             where('speciesCode', '==', speciesCode)
         );
         const lizardEntriesSnapshot = await getDocs(q);
@@ -734,8 +734,8 @@ const ToeClipCodeField = ({
 }
 
 const LandscapeTable = ({
-    site, speciesCode, toeCode, previousLizardEntries, setRecaptureHistoryIsOpen
-}) => {
+                            site, speciesCode, toeCode, previousLizardEntries, setRecaptureHistoryIsOpen
+                        }) => {
 
     const lizardHistoryLabelArray = [
         'Date',
@@ -764,14 +764,14 @@ const LandscapeTable = ({
     ];
 
 
-    return (
+  return (
         <motion.div
             className="absolute h-[calc(100%-2.5rem)] w-[calc(100%-2.5rem)] shadow-2xl top-0 left-0 bg-white border-2 border-asu-maroon rounded-2xl m-5 p-1 flex flex-col items-center portrait:hidden z-50"
             initial={{ opacity: 0, y: '50%' }}
             animate={{ opacity: 1, y: '0', transition: { duration: .15 } }}
             exit={{ opacity: 0, y: '25%', transition: { duration: .05 } }}
         >
-            <h1 className="text-3xl">Recapture History</h1>
+            <h1 className="text-3xl  text-black">Recapture History</h1>
 
             <motion.div className="flex items-center space-x-2 justify-center w-full border-black border-0 justify-items-center max-w-md">
                 <motion.div className="flex w-16 flex-col items-center">
@@ -805,17 +805,17 @@ const LandscapeTable = ({
 
             <motion.div className="border-2 border-black w-full h-full mb-2 rounded-xl shadow-lg overflow-y-auto">
                 <table className="text-center text-sm w-full table-auto border-collapse">
-                    <thead>
-                        <tr>
+                    <thead  className="text-black">
+                        <tr className="text-black">
                             {lizardHistoryLabelArray.map(((label, index, array) => (
                                 <td key={label} className={index < array.length - 1 ?
-                                    'border-r-[1px] border-b-2 border-black'
+                                    'border-r-[1px] border-b-2 border-black text-black'
                                     :
-                                    'border-r-0 border-b-2 border-black'}>{label}</td>
+                                    'border-r-0 border-b-2 border-black text-black'}>{label}</td>
                             )))}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-black">
                         {previousLizardEntries.map((entry, index, array) => {
                             return (
                                 <tr key={index}>
@@ -858,8 +858,8 @@ const LandscapeTable = ({
 }
 
 const ArthropodDataField = ({
-    label, value, setValue
-}) => {
+                                label, value, setValue
+                            }) => {
     return (
         <InputLabel
             layout="vertical"
@@ -975,7 +975,7 @@ export function FormField({ fieldName, value, setValue, site, project, taxa, lay
             return <PredatorField pred={value} setPred={setValue} />;
         case 'hdBody':
             return <HdBodyField value={value} setValue={setValue} />;
-        case 'year': 
+        case 'year':
             return <EntryYearField year={value} />
         default:
             return <div>{`Field not found: ${fieldName}`}</div>;

@@ -170,13 +170,14 @@ const arthropodLabels = [
     'HYMB',
     'LEPI',
     'MANT',
+    'MICRO',
     'ORTH',
     'PSEU',
     'SCOR',
     'SOLI',
     'THYS',
     'UNKI',
-    'MICRO',
+
     'Comments',
 ];
 

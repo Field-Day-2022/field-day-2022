@@ -8,6 +8,8 @@ import { getKey, getKeys, getLabel } from '../const/tableLabels';
 import { getSessionEntryCount, startEntryOperation } from '../utils/firestore';
 import { Type, notify } from './Notifier';
 import { FormField } from './FormFields';
+import '../styles/Table.css';
+import React from 'react';
 
 const BINARY_KEYS = ['noCaptures', 'isAlive', 'dead'];
 const TRUE_KEYS = ['Y', 'y', 'T', 't'];
@@ -91,6 +93,13 @@ export const TableEntry = forwardRef((props, ref) => {
                         dbKey={key}
                         entryData={entryData}
                         setEntryData={setEntryData}
+                        className={getLabel(key) === 'Date & Time' ? 'dateTimeColumn' :
+                            getLabel(key) === 'Site' ? 'siteColumn' :
+                                getLabel(key) === 'Year' ? 'yearColumn' :
+                                    getLabel(key) === 'Taxa' ? 'taxaColumn' :
+                                        getLabel(key) === 'Genus' ? 'genusColumn' :
+                                            getLabel(key) === 'Species' ? 'speciesColumn' : ''
+                        }
                     />
                 )
             ))}
@@ -98,7 +107,7 @@ export const TableEntry = forwardRef((props, ref) => {
     );
 });
 
-const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData }) => {
+const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData, className}) => {
     const [editable, setEditable] = useState(true);
 
     const onChangeHandler = (e) => {
@@ -118,16 +127,18 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
             notify(Type.error, "Editing the year directly is not supported. Please edit the date instead.");
         }
     };
-    
+
     let disabled = dbKey === 'year' || entryUIState === 'viewing' || (entryUIState === 'editing' && !editable) || entryUIState === 'deleting';
 
     const size = entryData[dbKey] ? String(entryData[dbKey]).length : 1;
 
     return (
-        <td className="text-center border-b border-neutral-400 dark:border-neutral-600 p-1">
+
+        //<td className="text-center border-b border-neutral-400 dark:border-neutral-600 p-1">
+        <td className={`text-left border-b border-neutral-400 dark:border-neutral-600 p-1 ${className || ''}`}>
             <input
                 readOnly={disabled}
-                className="text-center w-full read-only:bg-transparent read-only:border-transparent read-only:focus:outline-none"
+                className="pl-2 w-full read-only:bg-transparent read-only:border-transparent read-only:focus:outline-none"
                 value={entryData[dbKey] ?? 'N/A'}
                 onChange={(e) => onChangeHandler(e)}
                 onClick={(e) => onClickHandler(e)}
@@ -138,13 +149,13 @@ const EntryItem = ({ entrySnapshot, dbKey, entryUIState, setEntryData, entryData
 };
 
 const Actions = ({
-    onEditClick,
-    onDeleteClick,
-    onSaveClick,
-    onCancelClick,
-    entryUIState,
-    deleteMessage
-}) => {
+                     onEditClick,
+                     onDeleteClick,
+                     onSaveClick,
+                     onCancelClick,
+                     entryUIState,
+                     deleteMessage
+                 }) => {
     return (
         <td className="border-b border-neutral-400 dark:border-neutral-600 p-2">
             <div className="flex flex-row w-full justify-around">

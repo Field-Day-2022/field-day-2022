@@ -1,0 +1,9 @@
+It seems to me that, after a bit of playing around with the current table structure, the past team made some custom
+implementation that serves us no use. It is astoundingly hard to make changes to. There is a solution, as react has a built in
+thing called react tables that I beleive we should use instead.
+
+I am making this documentation folder, and this document, as a way to document the 2 hours I've spent on this today.
+
+Even with no code changes, all of this is for the better as i know, tomorrow, I need to reimplement the entire thing.
+
+That should.. take some time.

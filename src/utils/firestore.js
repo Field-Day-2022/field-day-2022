@@ -21,7 +21,11 @@ export const getArthropodLabels = async () => {
     const snapshot = await getDocs(
         query(collection(db, 'AnswerSet'), where('set_name', '==', 'ArthropodSpecies')),
     );
-    return snapshot.docs[0].data().answers.map((ans) => ans.primary);
+
+    const answers = snapshot.docs[0]?.data().answers || [];
+
+    // Sort the answers by the 'primary' field alphabetically
+    return answers.map((ans) => ans.primary).sort((a, b) => a.localeCompare(b));
 };
 
 const getDocsFromCollection = async (collectionName, constraints = []) => {

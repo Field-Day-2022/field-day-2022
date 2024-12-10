@@ -1,4 +1,5 @@
 import toast, { Toaster } from "react-hot-toast";
+import React from 'react';
 
 const Type = {
     error: 0,
@@ -11,7 +12,7 @@ const style = {
 }
 
 const config = {
-    duration: 2000, 
+    duration: 2000,
     style: style,
 
 }

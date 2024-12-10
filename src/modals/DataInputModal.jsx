@@ -8,6 +8,7 @@ import NewEntryForm from "../components/NewEntryForm";
 import { uploadNewSession } from "../utils/firestore";
 import { useAtomValue } from "jotai";
 import { appMode } from "../utils/jotai";
+import React from 'react';
 
 export default function DataInputModal({ showModal, closeModal }) {
     const [activeTab, setActiveTab] = useState('New Data');

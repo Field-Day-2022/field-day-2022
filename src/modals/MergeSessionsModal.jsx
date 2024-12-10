@@ -7,6 +7,7 @@ import { db } from '../utils/firebase';
 import { useAtomValue } from 'jotai';
 import { appMode, currentProjectName } from '../utils/jotai';
 import { Type, notify } from '../components/Notifier';
+import React from 'react';
 
 export default function MergeSessionsModal({ showModal, closeModal }) {
     const [sessionOne, setSessionOne] = useState(null);

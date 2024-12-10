@@ -11,7 +11,7 @@ import { FormBuilderIcon, ExportIcon, NewDataIcon, TurtleIcon, LizardIcon, Mamma
 import FormBuilderModal from '../modals/FormBuilderModal';
 import ExportModal from '../modals/ExportModal';
 import DataInputModal from '../modals/DataInputModal';
-
+import React from 'react';
 import { usePagination } from '../hooks/usePagination';
 import Button from '../components/Button';
 import { ProjectField } from '../components/FormFields';
@@ -79,12 +79,12 @@ export default function TablePage() {
                 showModal={activeTool === 'newData'}
                 closeModal={() => setActiveTool('none')}
             />
-            <MergeSessionsModal 
+            <MergeSessionsModal
                 showModal={activeTool === 'merge'}
                 closeModal={() =>setActiveTool('none')}
             />
             <div className="flex justify-between items-center overflow-auto dark:bg-neutral-700">
-                <TabBar 
+                <TabBar
                     tabs={tabsData.map((tab) => ({
                         ...tab,
                         active: tab.text === tableName,
@@ -127,7 +127,7 @@ export default function TablePage() {
                             icon={<NewDataIcon />}
                             onClick={() => setActiveTool('newData')}
                         />
-                        <Button 
+                        <Button
                             flexible={true}
                             text="Merge Sessions"
                             icon={<MergeIcon />}

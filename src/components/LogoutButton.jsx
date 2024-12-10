@@ -1,4 +1,5 @@
 import Button from "./Button";
+import React from 'react';
 
 export default function LogoutButton({ auth }) {
     return (

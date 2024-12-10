@@ -1,6 +1,7 @@
 import { ColumnToggleIcon } from '../assets/icons';
 import { useState } from 'react';
 import ColumnSelector from './ColumnSelector';
+import React from 'react';
 
 const ColumnSelectorButton = ({ labels, columns, toggleColumn }) => {
     const [showColumnSelector, setShowColumnSelector] = useState(false);
